@@ -1,9 +1,11 @@
-fn input<'a, I: Iterator<Item = &'a str>>(data: I) -> impl Iterator<Item = Vec<u32>> + use<'a, I> {
-    data.map(|x| {
-        x.split_whitespace()
-            .filter_map(|x| x.parse::<u32>().ok())
-            .collect()
-    })
+fn input(data: &str) -> Vec<Vec<u32>> {
+    data.lines()
+        .map(|x| {
+            x.split_whitespace()
+                .filter_map(|x| x.parse().ok())
+                .collect()
+        })
+        .collect()
 }
 
 fn safe_items(data: &Vec<i32>) -> bool {
@@ -18,8 +20,9 @@ fn difference(data: &Vec<u32>) -> Vec<i32> {
         .collect()
 }
 
-pub fn part1<'a, I: Iterator<Item = &'a str>>(data: I) -> u32 {
+pub fn part1(data: &str) -> u32 {
     input(data)
+        .into_iter()
         .map(|v| difference(&v))
         .filter(safe_items)
         .count() as u32
@@ -39,8 +42,8 @@ fn safe_items_ignore(data: &Vec<u32>) -> bool {
     false
 }
 
-pub fn part2<'a, I: Iterator<Item = &'a str>>(data: I) -> u32 {
-    input(data).filter(safe_items_ignore).count() as u32
+pub fn part2(data: &str) -> u32 {
+    input(data).into_iter().filter(safe_items_ignore).count() as u32
 }
 
 #[cfg(test)]
@@ -55,13 +58,12 @@ mod tests {
 1 3 2 4 5
 8 6 4 4 1
 1 3 6 7 9";
-        assert_eq!(part1(data.lines()), 2);
+        assert_eq!(part1(data), 2);
     }
 
     #[test]
     fn part1_data() {
-        let data = include_str!("../input/day02.txt");
-        assert_eq!(part1(data.lines()), 572);
+        assert_eq!(part1(include_str!("../input/day02.txt")), 572);
     }
 
     #[test]
@@ -72,12 +74,11 @@ mod tests {
 1 3 2 4 5
 8 6 4 4 1
 1 3 6 7 9";
-        assert_eq!(part2(data.lines()), 4);
+        assert_eq!(part2(data), 4);
     }
 
     #[test]
     fn part2_data() {
-        let data = include_str!("../input/day02.txt");
-        assert_eq!(part2(data.lines()), 612);
+        assert_eq!(part2(include_str!("../input/day02.txt")), 612);
     }
 }
